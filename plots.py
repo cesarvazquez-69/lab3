@@ -30,3 +30,7 @@ plt.legend() # makes the 'label's show up
 plt.show()
 if (__name__ == '__main__'):
 example_graph_creation()
+
+
+if (__name__ == '__main__'):
+example_graph_creation()
