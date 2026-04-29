@@ -22,7 +22,15 @@ def range(max_exclusive: int) -> Optional['Node']:
     if max_exclusive == 0:
         return None
     else:
-        return Node(max_exclusive - 1, range (max_exclusive -1))
+        rest = range(max_exclusive -1)
+        return append(rest, max_exclusive - 1)
+    
+
+def append (lst: Optional[Node], value: int) -> Node:
+    if lst is None:
+        return Node(value, None)
+    else:
+        return Node (lst.value, append(lst,next, value))
 
     
 
