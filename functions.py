@@ -29,7 +29,13 @@ def occurs(value: int, lst: Optional[Node]) -> bool:
     else:
         return occurs(value, lst.next)
 
-
+def has_dup(lst: Optional[Node]) -> bool:
+    if lst is None:
+        return False
+    elif occurs(lst.value, lst.next):
+        return True
+    else:
+        return has_dup(lst.next)
 
 
 def append (lst: Optional[Node], value: int) -> Node:
@@ -41,7 +47,7 @@ def append (lst: Optional[Node], value: int) -> Node:
 
 
 
-@dataclass
+
 class Tests(unittest.TestCase):
 
     def test_range_5(self):
@@ -59,7 +65,13 @@ class Tests(unittest.TestCase):
         self.assertFalse(occurs(5, lst))
 
     
+    def test_has_dup_true(self):
+        lst = Node(1, Node(2, Node(1, None)))
+        self.assertTrue(has_dup(lst))
 
+    def test_has_dup_false(self):
+        lst = Node(1, Node(2, Node(3, None)))
+        self.assertFalse(has_dup(lst))
 
 
 
