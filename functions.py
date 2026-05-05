@@ -12,6 +12,16 @@ class Tests(unittest.TestCase):
 pass
 
 
+@dataclass(frozen=True)
+class Empty:
+    pass
+
+@dataclass(frozen=True)
+class Link:
+    first: int
+    rest: "LinkedList"
+
+LinkedList = Union[Empty, Link]
 
 class Node:
     value: int
@@ -32,9 +42,39 @@ def append (lst: Optional[Node], value: int) -> Node:
     else:
         return Node (lst.value, append(lst,next, value))
 
-    
+# Returns True if n appears in nums.
+def occurs(n: int, nums: LinkedList) -> bool:
+    match nums:
+        case Empty():
+            return False
+        case Link(first, rest):
+            return first == n or occurs(n, rest)
+  # Returns True if any number appears more than once.
+def has_dup(nums: LinkedList) -> bool:
+    match nums:
+        case Empty():
+            return False
+        case Link(first, rest):
+            return occurs(first, rest) or has_dup(rest)
+
+# Inserts n into a sorted linked list in ascending order.
+def insert(n: int, nums: LinkedList) -> LinkedList:
+    match nums:
+        case Empty():
+            return Link(n, Empty())
+        case Link(first, rest):
+            if n <= first:
+                return Link(n, nums)
+            return Link(first, insert(n, rest))
 
 
+# Returns a sorted version of nums in ascending order.
+def insertion_sort(nums: LinkedList) -> LinkedList:
+    match nums:
+        case Empty():
+            return Empty()
+        case Link(first, rest):
+            return insert(first, insertion_sort(rest))
 
 
 
