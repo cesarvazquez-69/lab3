@@ -37,28 +37,49 @@ def range(max_exclusive: int) -> Optional['Node']:
         return append(rest, max_exclusive - 1)
     
 
-def occurs(value: int, lst: Optional[Node]) -> bool:
-    if lst is None:
-        return False
-    elif lst.value == value: 
-        return True
-    else:
-        return occurs(value, lst.next)
 
-def has_dup(lst: Optional[Node]) -> bool:
-    if lst is None:
-        return False
-    elif occurs(lst.value, lst.next):
-        return True
-    else:
-        return has_dup(lst.next)
-
+# Returns True if n appears in nums.
+def occurs(n: int, nums: LinkedList) -> bool:
+    match nums:
+        case Empty():
+            return False
+        case Link(first, rest):
+            return first == n or occurs(n, rest)
+  # Returns True if any number appears more than once.
+def has_dup(nums: LinkedList) -> bool:
+    match nums:
+        case Empty():
+            return False
+        case Link(first, rest):
+            return occurs(first, rest) or has_dup(rest)
 
 def append (lst: Optional[Node], value: int) -> Node:
     if lst is None:
         return Node(value, None)
     else:
         return Node (lst.value, append(lst.next, value))
+
+
+
+# Inserts n into a sorted linked list in ascending order.
+def insert(n: int, nums: LinkedList) -> LinkedList:
+    match nums:
+        case Empty():
+            return Link(n, Empty())
+        case Link(first, rest):
+            if n <= first:
+                return Link(n, nums)
+            return Link(first, insert(n, rest))
+
+
+# Returns a sorted version of nums in ascending order.
+def insertion_sort(nums: LinkedList) -> LinkedList:
+    match nums:
+        case Empty():
+            return Empty()
+        case Link(first, rest):
+            return insert(first, insertion_sort(rest))
+
 
 
 
@@ -89,41 +110,17 @@ class Tests(unittest.TestCase):
         lst = Node(1, Node(2, Node(3, None)))
         self.assertFalse(has_dup(lst))
 
-
-
-# Returns True if n appears in nums.
-def occurs(n: int, nums: LinkedList) -> bool:
-    match nums:
-        case Empty():
-            return False
-        case Link(first, rest):
-            return first == n or occurs(n, rest)
-  # Returns True if any number appears more than once.
-def has_dup(nums: LinkedList) -> bool:
-    match nums:
-        case Empty():
-            return False
-        case Link(first, rest):
-            return occurs(first, rest) or has_dup(rest)
-
-# Inserts n into a sorted linked list in ascending order.
-def insert(n: int, nums: LinkedList) -> LinkedList:
-    match nums:
-        case Empty():
-            return Link(n, Empty())
-        case Link(first, rest):
-            if n <= first:
-                return Link(n, nums)
-            return Link(first, insert(n, rest))
-
-
-# Returns a sorted version of nums in ascending order.
-def insertion_sort(nums: LinkedList) -> LinkedList:
-    match nums:
-        case Empty():
-            return Empty()
-        case Link(first, rest):
-            return insert(first, insertion_sort(rest))
+    def test_insertion_sort(self):
+        self.assertEqual(insertion_sort(Empty()), Empty())
+        self.assertEqual(insertion_sort(Link(5, Empty())), Link(5, Empty()))
+        self.assertEqual(
+            insertion_sort(Link(3, Link(1, Link(2, Empty())))),
+            Link(1, Link(2, Link(3, Empty())))
+        )
+        self.assertEqual(
+            insertion_sort(Link(4, Link(2, Link(4, Link(1, Empty()))))),
+            Link(1, Link(2, Link(4, Link(4, Empty()))))
+        )
 
 
 
