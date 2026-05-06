@@ -1,16 +1,11 @@
 from typing import *
 from dataclasses import dataclass
 import unittest
-import math
 import sys
 sys.setrecursionlimit(10**6)
 
 
 
-@dataclass
-class Tests(unittest.TestCase):
-
-pass
 
 
 @dataclass(frozen=True)
@@ -24,17 +19,17 @@ class Link:
 
 LinkedList = Union[Empty, Link]
 
-class Node:
-    value: int
-    next: Optional['Node']
 
-def range(max_exclusive: int) -> Optional['Node']:
-    # Accepts an integer larg er than 0 & returns a LinkedList
-    if max_exclusive == 0:
-        return None
+
+def range(max_exclusive: int) -> LinkedList:
+    return range_from(0, max_exclusive)
+
+
+def range_from(current: int, max_exclusive: int) -> LinkedList:
+    if current == max_exclusive:
+        return Empty()
     else:
-        rest = range(max_exclusive -1)
-        return append(rest, max_exclusive - 1)
+        return Link(current, range_from(current + 1, max_exclusive))
     
 
 
@@ -45,7 +40,7 @@ def occurs(n: int, nums: LinkedList) -> bool:
             return False
         case Link(first, rest):
             return first == n or occurs(n, rest)
-  # Returns True if any number appears more than once.
+# Returns True if any number appears more than once.
 def has_dup(nums: LinkedList) -> bool:
     match nums:
         case Empty():
@@ -53,11 +48,6 @@ def has_dup(nums: LinkedList) -> bool:
         case Link(first, rest):
             return occurs(first, rest) or has_dup(rest)
 
-def append (lst: Optional[Node], value: int) -> Node:
-    if lst is None:
-        return Node(value, None)
-    else:
-        return Node (lst.value, append(lst.next, value))
 
 
 
@@ -90,24 +80,24 @@ class Tests(unittest.TestCase):
     def test_range_5(self):
         self.assertEqual(
             range(5),
-            Node(0, Node(1, Node(2, Node(3, Node(4, None)))))
+            Link(0, Link(1, Link(2, Link(3, Link(4, Empty())))))
         )
 
     def test_occurs_true(self):
-        lst = Node(0, Node(1, Node(2, None)))
+        lst = Link(0, Link(1, Link(2, Empty())))
         self.assertTrue(occurs(1, lst))
 
     def test_occurs_false(self):
-        lst = Node(0, Node(1, Node(2, None)))
+        lst = Link(0, Link(1, Link(2, Empty())))
         self.assertFalse(occurs(5, lst))
 
     
     def test_has_dup_true(self):
-        lst = Node(1, Node(2, Node(1, None)))
+        lst = Link(1, Link(2, Link(1, Empty())))
         self.assertTrue(has_dup(lst))
 
     def test_has_dup_false(self):
-        lst = Node(1, Node(2, Node(3, None)))
+        lst = Link(1, Link(2, Link(3, Empty())))
         self.assertFalse(has_dup(lst))
 
     def test_insertion_sort(self):
@@ -131,4 +121,4 @@ class Tests(unittest.TestCase):
 # being executed or whether it's just being
 # imported from some other module.
 if (__name__ == '__main__'):
-unittest.main()
+    unittest.main()
