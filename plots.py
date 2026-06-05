@@ -3,10 +3,13 @@ import time
 import matplotlib.pyplot as plt
 
 
+# Returns 15 evenly-spaced N values from 1 to n_max inclusive.
 def make_n_values(n_max: int) -> list[int]:
     return [round(1 + i * (n_max - 1) / 14) for i in range(15)]
 
 
+# Returns the average runtime in seconds of has_dup on
+# a worst-case linked list of size n.
 def time_has_dup(n: int) -> float:
     total = 0.0
 
@@ -23,8 +26,10 @@ def time_has_dup(n: int) -> float:
     return total / 4
 
 
-def main():
-    # Use a fixed n_max first so the program does not seem frozen.
+# Creates and displays a graph of the worst-case runtime
+# of has_dup as a function of N.
+def main() -> None:
+    # Adjust n_max until the largest input takes about 1.5–3 seconds.
     n_max = 2000
 
     x_values = make_n_values(n_max)
@@ -36,14 +41,16 @@ def main():
         y_values.append(seconds)
         print(f"Average for n={n}: {seconds:.6f} seconds")
 
-    plt.plot(x_values, y_values, marker="o")
+    plt.plot(x_values, y_values, marker="o", label="has_dup")
     plt.title("Worst-Case Time Complexity of has_dup")
     plt.xlabel("N")
     plt.ylabel("Seconds")
     plt.grid(True)
+    plt.legend()
     plt.savefig("worst_case_has_dup.png")
     plt.show()
 
 
 if __name__ == "__main__":
     main()
+
